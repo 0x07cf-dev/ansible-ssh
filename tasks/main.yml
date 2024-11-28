@@ -1,0 +1,28 @@
+---
+- ansible.builtin.include_tasks:
+    file: vars.yml
+    apply:
+      tags:
+        - ssh
+        - vars
+
+- ansible.builtin.include_tasks:
+    file: config.yml
+    apply:
+      tags:
+        - ssh
+        - config
+
+- ansible.builtin.include_tasks:
+    file: systemd.yml
+    apply:
+      tags:
+        - ssh
+        - systemd
+
+- ansible.builtin.include_tasks:
+    file: facts.yml
+    apply:
+      tags:
+        - ssh
+        - facts

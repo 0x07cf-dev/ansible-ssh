@@ -1,0 +1,3 @@
+---
+__ssh_config_path: /etc/ssh/sshd_config
+__ssh_daemon: ssh

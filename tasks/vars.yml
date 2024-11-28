@@ -1,0 +1,25 @@
+---
+- name: Include OS-specific variables ({{ ansible_os_family }})
+  ansible.builtin.include_vars:
+    dir: vars
+    files_matching: "{{ item }}"
+    depth: 1
+  loop:
+    - "all.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+  failed_when: false
+
+- ansible.builtin.set_fact:
+    ssh_args:
+      ssh_config_path: __ssh_config_path
+      ssh_daemon: __ssh_daemon
+
+- name: Set SSH variables
+  ansible.builtin.set_fact:
+    "{{ item.key }}": "{{ lookup('vars', item.value) }}"
+  when:
+    - vars[item.key] is undefined
+    - vars[item.value] is defined
+  loop: "{{ ssh_args | dict2items }}"
