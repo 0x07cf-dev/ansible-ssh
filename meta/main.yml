@@ -1,0 +1,13 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: "0x07cf"
+  description: Configures and hardens SSH for Linux.
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags: []

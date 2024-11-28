@@ -1,0 +1,59 @@
+---
+- name: Ensure SSH is configured
+  ansible.builtin.lineinfile:
+    path: "{{ ssh_config_path }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: sshd -T -f %s
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - regexp: ^#?Port
+      line: Port {{ ssh_port }}
+    - regexp: ^#?PasswordAuthentication
+      line: PasswordAuthentication {{ "yes" if ssh_password_auth else "no" }}
+    - regexp: ^#?PermitRootLogin
+      line: PermitRootLogin {{ ssh_permit_root_login }}
+    - regexp: ^#?UseDNS
+      line: UseDNS {{ "yes" if ssh_usedns else "no" }}
+    - regexp: ^#?PermitEmptyPasswords
+      line: PermitEmptyPasswords {{ "yes" if ssh_permit_empty_password else "no" }}
+    - regexp: ^#?KbdInteractiveAuthentication
+      line: KbdInteractiveAuthentication {{ "yes" if ssh_challenge_response_auth else "no" }}
+    - regexp: ^#?GSSAPIAuthentication
+      line: GSSAPIAuthentication {{ "yes" if ssh_gssapi_auth else "no" }}
+    - regexp: ^#?X11Forwarding
+      line: X11Forwarding {{ "yes" if ssh_x11_forwarding else "no" }}
+    - regexp: ^#?PrintMotd
+      line: PrintMotd {{ "yes" if ssh_motd else "no" }}
+  notify: Restart ssh
+
+- name: Ensure SSH user whitelist is set
+  ansible.builtin.lineinfile:
+    path: "{{ ssh_config_path }}"
+    regexp: ^AllowUsers
+    line: AllowUsers {{ ssh_whitelist | join(' ') }}
+    state: present
+    create: true
+    validate: sshd -T -f %s
+    owner: root
+    group: root
+    mode: "0644"
+  when: ssh_whitelist | length
+  notify: Restart ssh
+
+- name: Ensure SSH group whitelist is set
+  ansible.builtin.lineinfile:
+    path: "{{ ssh_config_path }}"
+    regexp: ^AllowGroups
+    line: AllowGroups {{ ssh_whitelist_groups | join(' ') }}
+    state: present
+    create: true
+    validate: sshd -T -f %s
+    owner: root
+    group: root
+    mode: "0644"
+  when: ssh_whitelist_groups | length
+  notify: Restart ssh

@@ -1,0 +1,5 @@
+---
+- ansible.builtin.include_tasks: vars.yml
+- ansible.builtin.include_tasks: config.yml
+- ansible.builtin.include_tasks: systemd.yml
+- ansible.builtin.include_tasks: facts.yml

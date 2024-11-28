@@ -1,0 +1,15 @@
+---
+ssh_port: 22
+ssh_password_auth: true
+ssh_permit_root_login: prohibit-password
+ssh_usedns: false
+ssh_permit_empty_password: false
+ssh_challenge_response_auth: false
+ssh_gssapi_auth: false
+ssh_x11_forwarding: false
+ssh_motd: false
+
+ssh_state: started
+
+ssh_whitelist: []
+ssh_whitelist_groups: []

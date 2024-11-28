@@ -1,0 +1,6 @@
+---
+- name: Ensure service is started
+  become: true
+  ansible.builtin.service:
+    name: "{{ ssh_daemon }}"
+    state: "{{ ssh_state }}"
